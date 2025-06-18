@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Observer 1 Form</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 700px; margin: 30px auto; }
+  label { display: block; margin-top: 15px; font-weight: bold; }
+  input[type="text"], input[type="checkbox"] { padding: 5px; font-size: 1em; }
+  button.time-btn { margin-left: 10px; }
+</style>
+</head>
+<body>
+
+<h1>Observer 1 - Starboard Side Operation</h1>
+
+<form id="observerForm">
+
+  <label>Airline:
+    <input type="text" name="airline" required />
+  </label>
+
+  <label>Registration (Reg):
+    <input type="text" name="registration" required />
+  </label>
+
+  <label>Flight Number:
+    <input type="text" name="flightNumber" required />
+  </label>
+
+  <label>Parking Bay:
+    <input type="text" name="parkingBay" />
+  </label>
+
+  <label>Engines Shutdown & Parking Brakes Applied:
+    <input type="checkbox" name="enginesShutdown" />
+  </label>
+
+  <label>Chocks On Time:
+    <input type="text" id="chocksOn" name="chocksOn" readonly />
+    <button type="button" class="time-btn" onclick="setCurrentTime('chocksOn')">Set Time</button>
+  </label>
+
+  <label>Cones Placed Time:
+    <input type="text" id="conesPlaced" name="conesPlaced" readonly />
+    <button type="button" class="time-btn" onclick="setCurrentTime('conesPlaced')">Set Time</button>
+  </label>
+
+  <label>Beacon Light Off Time:
+    <input type="text" id="beaconLightOff" name="beaconLightOff" readonly />
+    <button type="button" class="time-btn" onclick="setCurrentTime('beaconLightOff')">Set Time</button>
+  </label>
+
+  <label>Steps 1 Positioning Start:
+    <input type="text" id="steps1Start" name="steps1Start" readonly />
+    <button type="button" class="time-btn" onclick="setCurrentTime('steps1Start')">Set Time</button>
+  </label>
+
+  <label>Steps 1 Positioning End:
+    <input type="text" id="steps1End" name="steps1End" readonly />
+    <button type="button" class="time-btn" onclick="setCurrentTime('steps1End')">Set Time</button>
+  </label>
+
+  <!-- Add more fields as needed -->
+
+  <br><br>
+  <button type="submit">Submit Form</button>
+</form>
+
+<script>
+function setCurrentTime(fieldId) {
+  const now = new Date();
+  const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+  document.getElementById(fieldId).value = timeString;
+}
+
+document.getElementById('observerForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const formData = new FormData(this);
+  const dataObj = {};
+  formData.forEach((value, key) => { dataObj[key] = value; });
+
+  fetch('https://script.google.com/macros/s/AKfycby5nxfkdtaPwiYm--r2j7SaDucS6-JiC9W6lNAFUSHVtgh4-JTCkB3_z8m5Z8LEdjRlXg/exec', {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(dataObj)
+  }).then(() => {
+    alert('Form submitted successfully!');
+    this.reset();
+  }).catch(() => alert('Error submitting form.'));
+});
+</script>
+
+</body>
+</html>
